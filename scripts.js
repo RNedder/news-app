@@ -1,4 +1,4 @@
-const apiKey = process.env.NEWS_API_KEY; 
+const apiKey = process.env.NEWS_API_KEY;
 
 const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
 
@@ -7,7 +7,7 @@ async function fetchNews() {
         const response = await fetch(url);
         const data = await response.json();
         console.log(data);
-        
+
         displayNews(data.articles); // calls displayNews function
     } catch (error) {
         console.error('There was an error!', error);
@@ -16,31 +16,50 @@ async function fetchNews() {
 
 function displayNews(articles) { // pass in articles to iterate through and populate into divs
     const newsDiv = document.getElementById('news');
+    newsDiv.class = 'article';
 
     for (const article of articles) {
         const articleDiv = document.createElement('div'); // creates new div for each article
+        articleDiv.class = 'col-12 col-md-6 col-lg-3';
+        articleDiv.style = 'width: 18rem;';
 
-        const title = document.createElement('h4'); // creates new h4 element for the headline and appends to the article
-        title.textContent = article.title;
-
-        const date = document.createElement('h5'); // creates new h5 element for the date 
-        date.textContent = article.publishedAt;
-
-        const description = document.createElement('p'); // creates new p element for the description
-        description.textContent = article.description;
-
-        const url = document.createElement('p'); // creates new p element for the url
-        url.textContent = article.url;
-
-        articleDiv.appendChild(title); // appends information to the articleDiv  date, description, url
-        articleDiv.appendChild(date);
-        articleDiv.appendChild(description);
-        articleDiv.appendChild(url);
+        articleDiv.innerHTML = `
+            <div class='card'>
+                <img class='card-img-top img-fit' src='${article.urlToImage}' alt='...'>
+                <div class='card-body'>
+                    <h5 class='card-title'>${article.title}</h5>
+                    <h6 class='card-subtitle mb-2 text-muted'>${formatDate(article.publishedAt)}
+                    <p class='card-text text-dark'>${standardizeDescription(article.description)}...</p>
+                    <div class='text-end'>
+                        <a href='${article.url}' class='btn btn-outline-danger'>Read the Article</a>
+                    </div>
+                </div>
+            </div>
+        `
 
         newsDiv.appendChild(articleDiv); // append the article to the newsDiv
     }
     // append articles to the newsDiv
 
+}
+
+// standardizes the description size and changes the text if 'null'
+function standardizeDescription(description) {
+    if(description === "null") {
+        description = 'No description available.';
+        return description;
+    } else if(description.length > 150) {
+        description = description.substring(0,150);
+        return description;
+    } else {
+        return description;
+    }
+}
+
+// formats date
+function formatDate(date) {
+    date = date.substring(0,10);
+    return date;
 }
 
 fetchNews();

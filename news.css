@@ -1,0 +1,37 @@
+p {
+    margin-top: 5px;
+}
+
+.card .img-fit {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.card {
+    height: 100%;
+}
+
+.card-body {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.card-text {
+    flex-grow: 1;
+}
+
+@media (max-width: 767.98px) {
+    .card .img-fit {
+        aspect-ratio: 1.45 / 1;
+    }
+}
+
+h1 {
+    margin-left: 10px;
+}
+
+.card {
+    background-color: rgba(255, 215, 86, 0.315);
+    border: 1px solid red;
+}
